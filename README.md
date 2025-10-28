@@ -1,6 +1,6 @@
 # Introduction
 
-This repository contains the code required to produce the experimental results and plots for the paper "[Towards Deep Physics-Informed Kolmogorov–Arnold Networks](TODO)".
+This repository contains the code required to produce the experimental results and plots for the paper "[Towards Deep Physics-Informed Kolmogorov–Arnold Networks](https://arxiv.org/abs/2510.23501)".
 
 
 # Getting Started
@@ -37,12 +37,12 @@ If the code and/or results presented in this work helped you for your own work, 
 
 ```
 @misc{rgakan, 
-	title = {Towards deep physics-informed {K}olmogorov–{A}rnold networks}, 
+	title = {Towards Deep Physics-Informed Kolmogorov-Arnold Networks}, 
 	author = {Spyros Rigas and Fotios Anagnostopoulos and Michalis Papachristou and Georgios Alexandridis}, 
 	year = {2025}, 
-	eprint = {TODO}, 
+	eprint = {2510.23501}, 
 	archivePrefix = {arXiv}, 
 	primaryClass = {cs.LG}, 
-	url = {TODO}
+	url = {https://arxiv.org/abs/2510.23501}
 }
 ```
