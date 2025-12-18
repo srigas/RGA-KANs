@@ -1,6 +1,6 @@
 # Introduction
 
-This repository contains the code required to produce the experimental results and plots for the paper "[Towards Deep Physics-Informed Kolmogorov–Arnold Networks](https://arxiv.org/abs/2510.23501)".
+This repository contains the code required to produce the experimental results and plots for the paper "[Training Deep Physics-Informed Kolmogorov–Arnold Networks](https://arxiv.org/abs/2510.23501)".
 
 
 # Getting Started
@@ -26,9 +26,9 @@ Then launch JupyterLab:
 jupyter lab
 ```
 
-Open and run the notebook `auxiliaries/Data Preparation.ipynb` to create the `data` directory and populate it with the reference solutions for the PDEs studied in the paper.
+Open and run the notebook `auxiliaries/Data Preparation.ipynb` to create the `data` directory and populate it with the reference solutions for the PDEs studied in the paper. Do not forget to also run the `auxiliaries/Navier-Stokes Data Generator.ipynb` file to create the data file for the Navier-Stokes equation.
 
-Then open the notebooks in the parent directory in order (`1.*.ipynb` → `12.*.ipynb`) to reproduce all experiments and generate the data (`results` directory) and plots (`plots` directory) presented in the paper.
+Then open the notebooks in the parent directory in order (`1.*.ipynb` → `14.*.ipynb`) to reproduce all experiments and generate the data (`results` directory) and plots (`plots` directory) presented in the paper.
 
 
 # Citation
@@ -37,7 +37,7 @@ If the code and/or results presented in this work helped you for your own work, 
 
 ```
 @misc{rgakan, 
-	title = {Towards Deep Physics-Informed Kolmogorov-Arnold Networks}, 
+	title = {Training Deep Physics-Informed Kolmogorov-Arnold Networks}, 
 	author = {Spyros Rigas and Fotios Anagnostopoulos and Michalis Papachristou and Georgios Alexandridis}, 
 	year = {2025}, 
 	eprint = {2510.23501}, 
