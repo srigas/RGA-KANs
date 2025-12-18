@@ -186,3 +186,91 @@ def poisson_4_res(model, collocs):
     res = u_xx(collocs) + u_yy(collocs) - f
 
     return res
+
+
+# 2D Heat Multi-scale Equation
+def heat_multiscale_res(model, collocs):
+    # Diffusion coefficients
+    D_x = jnp.array(1.0 / (500 * jnp.pi)**2, dtype=jnp.float32)  # 1/(500π)²
+    D_y = jnp.array(1.0 / (jnp.pi**2), dtype=jnp.float32)        # 1/π²
+    
+    def u(x):
+        return model(x)
+    
+    # Derivatives
+    u_t = gradf(u, 0, 1)   # ∂u/∂t
+    u_xx = gradf(u, 1, 2)  # ∂²u/∂x²
+    u_yy = gradf(u, 2, 2)  # ∂²u/∂y²
+    
+    # Residual: u_t - D_x * u_xx - D_y * u_yy = 0
+    res = u_t(collocs) - D_x * u_xx(collocs) - D_y * u_yy(collocs)
+    
+    return res
+    
+    
+# Navier-Stokes on Torus (Velocity-Vorticity formulation)
+def nst_res(model, collocs, Re=100.0):
+
+    Re = jnp.array(Re, dtype=jnp.float32)
+    
+    def uv(x):
+        return model(x)  # shape (N, 2): [u, v]
+    
+    def u_func(x):
+        return uv(x)[:, [0]]
+    
+    def v_func(x):
+        return uv(x)[:, [1]]
+    
+    # Vorticity is derived: w = v_x - u_y
+    def w_func(x):
+        v_x = gradf(v_func, 1, 1)  # ∂v/∂x
+        u_y = gradf(u_func, 2, 1)  # ∂u/∂y
+        return v_x(x) - u_y(x)
+    
+    # First derivatives for vorticity transport
+    w_t = gradf(w_func, 0, 1)   # ∂w/∂t
+    w_x = gradf(w_func, 1, 1)   # ∂w/∂x
+    w_y = gradf(w_func, 2, 1)   # ∂w/∂y
+    
+    # Second derivatives for vorticity diffusion
+    w_xx = gradf(w_func, 1, 2)  # ∂²w/∂x²
+    w_yy = gradf(w_func, 2, 2)  # ∂²w/∂y²
+    
+    # Velocity derivatives for continuity
+    u_x = gradf(u_func, 1, 1)   # ∂u/∂x
+    v_y = gradf(v_func, 2, 1)   # ∂v/∂y
+    
+    # Get velocity values
+    u_val = u_func(collocs)
+    v_val = v_func(collocs)
+    
+    # Vorticity transport equation:
+    # w_t + u*w_x + v*w_y - (1/Re)*(w_xx + w_yy) = 0
+    res_vorticity = (w_t(collocs) + u_val * w_x(collocs) + v_val * w_y(collocs) 
+                     - (1.0/Re) * (w_xx(collocs) + w_yy(collocs)))
+    
+    # Continuity equation: u_x + v_y = 0
+    res_continuity = u_x(collocs) + v_y(collocs)
+    
+    # Stack residuals (no vorticity definition residual - it's satisfied by construction)
+    res = jnp.concatenate([res_vorticity, res_continuity], axis=1)
+    
+    return res
+
+
+def nst_w_func(model, collocs):
+
+    def uv(x):
+        return model(x)
+    
+    def u_func(x):
+        return uv(x)[:, [0]]
+    
+    def v_func(x):
+        return uv(x)[:, [1]]
+    
+    v_x = gradf(v_func, 1, 1)  # ∂v/∂x
+    u_y = gradf(u_func, 2, 1)  # ∂u/∂y
+    
+    return v_x(collocs) - u_y(collocs)

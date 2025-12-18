@@ -225,3 +225,77 @@ class PoissonPirate(PirateNet):
         y = (1 - x_coord**2)  * (1 - y_coord**2) * y
 
         return y
+
+
+class HeatMultiscaleKAN(KAN):
+
+    def __init__(self, n_in: int, n_out: int, n_hidden: int, num_layers: int, D: int = 5,
+                 init_scheme: Union[dict, None] = "default",
+                 period_axes: Union[None, dict] = None, rff_std: Union[None, float] = None,
+                 seed: int = 42):
+        
+        self.model = KAN(n_in, n_out, n_hidden, num_layers, D, init_scheme,
+                         period_axes, rff_std, seed)
+
+    
+    def __call__(self, inputs):
+        
+        # t = inputs[:, 0:1]  # Not used in BC embedding
+        x = inputs[:, 1:2]  # x-coordinate
+        y = inputs[:, 2:3]  # y-coordinate
+        
+        # Get raw network output
+        u_nn = self.model(inputs)
+        
+        # Spatial boundary factor: u = 0 on ∂Ω
+        # x*(1-x)*y*(1-y) is zero when x=0, x=1, y=0, or y=1
+        bc_factor = x * (1 - x) * y * (1 - y)
+        
+        u = u_nn * bc_factor
+        
+        return u
+
+
+class HeatMultiscaleModel(RGAKAN):
+
+    def __init__(self, n_in: int, n_out: int, n_hidden: int, num_blocks: int,
+                 D: int = 5, init_scheme: Union[dict, None] = None,
+                 alpha: float = 0.0, beta: float = 1.0, ref: Union[None, dict] = None,
+                 period_axes: Union[None, dict] = None, rff_std: Union[None, float] = None,
+                 sine_D: Union[None, int] = None, seed: int = 42):
+        
+        self.model = RGAKAN(n_in, n_out, n_hidden, num_blocks, D, init_scheme, alpha, beta, ref,
+                            period_axes, rff_std, sine_D, seed)
+
+    
+    def __call__(self, inputs):
+        x = inputs[:, 1:2]
+        y = inputs[:, 2:3]
+        
+        u_nn = self.model(inputs)
+        bc_factor = x * (1 - x) * y * (1 - y)
+        u = u_nn * bc_factor
+        
+        return u
+
+
+class HeatMultiscalePirate(PirateNet):
+    
+    def __init__(self, n_in: int, n_out: int, n_hidden: int, num_blocks: int,
+                 alpha: float, ref: Union[None, dict] = None,
+                 period_axes: Union[None, dict] = None, rff_std: Union[None, float] = None,
+                 RWF: dict = {"mean": 1.0, "std": 0.1}, seed: int = 42):
+
+        self.model = PirateNet(n_in, n_out, n_hidden, num_blocks, alpha, ref, period_axes,
+                               rff_std, RWF, seed)
+
+    
+    def __call__(self, inputs):
+        x = inputs[:, 1:2]
+        y = inputs[:, 2:3]
+        
+        u_nn = self.model(inputs)
+        bc_factor = x * (1 - x) * y * (1 - y)
+        u = u_nn * bc_factor
+        
+        return u
