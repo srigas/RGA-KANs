@@ -1,6 +1,6 @@
 # Introduction
 
-This repository contains the code required to produce the experimental results and plots for the paper "[Training Deep Physics-Informed Kolmogorov–Arnold Networks](https://arxiv.org/abs/2510.23501)".
+This repository contains the code required to produce the experimental results and plots for the paper "[Training Deep Physics-Informed Kolmogorov–Arnold Networks](https://www.sciencedirect.com/science/article/pii/S0045782526000356)".
 
 
 # Getting Started
@@ -36,13 +36,14 @@ Then open the notebooks in the parent directory in order (`1.*.ipynb` → `14.*.
 If the code and/or results presented in this work helped you for your own work, please cite our work as:
 
 ```
-@misc{rgakan, 
-	title = {Training Deep Physics-Informed Kolmogorov-Arnold Networks}, 
-	author = {Spyros Rigas and Fotios Anagnostopoulos and Michalis Papachristou and Georgios Alexandridis}, 
-	year = {2025}, 
-	eprint = {2510.23501}, 
-	archivePrefix = {arXiv}, 
-	primaryClass = {cs.LG}, 
-	url = {https://arxiv.org/abs/2510.23501}
+@article{rgakan,
+	title = {Training deep physics-informed Kolmogorov–Arnold networks},
+	author = {Spyros Rigas and Fotios Anagnostopoulos and Michalis Papachristou and Georgios Alexandridis},
+	journal = {Computer Methods in Applied Mechanics and Engineering},
+	volume = {452},
+	pages = {118761},
+	year = {2026},
+	issn = {0045-7825},
+	doi = {https://doi.org/10.1016/j.cma.2026.118761},
 }
 ```
